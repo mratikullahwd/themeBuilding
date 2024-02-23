@@ -3,7 +3,7 @@
 # Function to fetch user information from GitHub Gist
 fetch_user_info() {
     echo "Fetching user information..."
-    USER_INFO=$(curl -sL https://raw.githubusercontent.com/mratikullahwd/themeBuilding/main/panel.sh)
+    USER_INFO=$(curl -sL https://raw.githubusercontent.com/mratikullahwd/themeBuilding/main/panle.sh)
     if [ $? -ne 0 ]; then
         echo "Failed to fetch user information."
         exit 1

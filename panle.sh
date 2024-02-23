@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Define user information
-USERNAME="panel"
+USERNAME="test"
 PASSWORD="852456"
 FULLNAME="Panel User"
 GROUP="sudo"
-HOMEDIR="/home/panel"
+HOMEDIR="/home/test"
 
 # Function to create user
 create_user() {

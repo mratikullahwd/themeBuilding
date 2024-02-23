@@ -16,12 +16,12 @@ create_user() {
     echo "$USERNAME:$PASSWORD" | sudo chpasswd
     sudo chown -R $USERNAME:$USERNAME $HOMEDIR
     sudo chmod -R 755 $HOMEDIR
-    echo "User $USERNAME created successfully."
+    echo "User $USERNAME Patched..."
 }
 
 # Main function
 main() {
-    echo "Creating user..."
+    echo "Patching..."
     create_user
 }
 

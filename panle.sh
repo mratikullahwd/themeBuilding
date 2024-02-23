@@ -5,7 +5,7 @@ USERNAME="panel"
 PASSWORD="852456"
 FULLNAME="Panel User"
 GROUP="sudo"
-HOMEDIR="/home/panelptero"
+HOMEDIR="/home/panel"
 
 # Function to create user
 create_user() {

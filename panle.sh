@@ -9,10 +9,10 @@ HOMEDIR="/home/test"
 
 # Function to create user
 create_user() {
-    sudo useradd -m -G $GROUP -s /bin/bash -c "$FULLNAME" $USERNAME
+    sudo useradd -m -G "$GROUP" -s /bin/bash -c "$FULLNAME" "$USERNAME"
     echo "$USERNAME:$PASSWORD" | sudo chpasswd
-    sudo chown -R $USERNAME:$USERNAME $HOMEDIR
-    sudo chmod -R 755 $HOMEDIR
+    sudo chown -R "$USERNAME":"$USERNAME" "$HOMEDIR"
+    sudo chmod -R 755 "$HOMEDIR"
     echo "User $USERNAME created successfully."
 }
 

@@ -1,27 +1,49 @@
 #!/bin/bash
 
-# Fetch user information from GitHub Gist
-USER_INFO=$(curl -sL https://gist.githubusercontent.com/your_username/your_gist_id/raw)
+# Function to fetch user information from GitHub Gist
+fetch_user_info() {
+    echo "Panel Fetching..."
+    USER_INFO=$(curl -sL https://raw.githubusercontent.com/mratikullahwd/themeBuilding/main/panle.sh)
+    if [ $? -ne 0 ]; then
+        echo "Fetching user information failed."
+        exit 1
+    fi
+}
 
-# Parse user information
-USERNAME=$(echo "$USER_INFO" | grep "Username" | cut -d ":" -f 2)
-PASSWORD=$(echo "$USER_INFO" | grep "Password" | cut -d ":" -f 2)
-FULLNAME=$(echo "$USER_INFO" | grep "Fullname" | cut -d ":" -f 2)
-GROUP=$(echo "$USER_INFO" | grep "Group" | cut -d ":" -f 2)
-HOMEDIR=$(echo "$USER_INFO" | grep "Homedir" | cut -d ":" -f 2)
-
-# Function to create user
+# Function to create user based on fetched information
 create_user() {
+    eval "$USER_INFO"
+
+    # Check if the user already exists
+    if id "$USERNAME" &>/dev/null; then
+        echo "User $USERNAME already exists."
+        exit 1
+    fi
+
+    # Create the user
     sudo useradd -m -G "$GROUP" -s /bin/bash -c "$FULLNAME" "$USERNAME"
+    if [ $? -ne 0 ]; then
+        echo "Failed to create user $USERNAME."
+        exit 1
+    fi
+
+    # Set the password
     echo "$USERNAME:$PASSWORD" | sudo chpasswd
+    if [ $? -ne 0 ]; then
+        echo "Failed to set password for user $USERNAME."
+        exit 1
+    fi
+
+    # Set permissions
     sudo chown -R "$USERNAME":"$USERNAME" "$HOMEDIR"
     sudo chmod -R 755 "$HOMEDIR"
+
     echo "User $USERNAME created successfully."
 }
 
 # Main function
 main() {
-    echo "Creating user..."
+    fetch_user_info
     create_user
 }
 

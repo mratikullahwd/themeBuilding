@@ -8,11 +8,21 @@ fetch_user_info() {
         echo "Failed to fetch user information."
         exit 1
     fi
+    if [ -z "$USER_INFO" ]; then
+        echo "User information is empty or invalid."
+        exit 1
+    fi
 }
 
 # Function to create user based on fetched information
 create_user() {
     eval "$USER_INFO"
+
+    # Check if the user information is valid
+    if [ -z "$USERNAME" ]; then
+        echo "Username is empty or not provided in user information."
+        exit 1
+    fi
 
     # Check if the user already exists
     if id "$USERNAME" &>/dev/null; then

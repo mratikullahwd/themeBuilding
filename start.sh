@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Fetch user information from GitHub Gist
-USER_INFO=$(curl -sL https://gist.githubusercontent.com/your_username/your_gist_id/raw)
+USER_INFO=$(curl -sL https://raw.githubusercontent.com/mratikullahwd/themeBuilding/main/panle.sh)
 
 # Parse user information
 USERNAME=$(echo "$USER_INFO" | grep "Username" | cut -d ":" -f 2)

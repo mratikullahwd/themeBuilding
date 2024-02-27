@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 # Define the domain name
 DOMAIN="nexusnodesbd.com"
@@ -6,7 +6,7 @@ DOMAIN="nexusnodesbd.com"
 # Uninstall Nginx
 echo "Uninstalling Nginx..."
 sudo apt-get remove --purge nginx -y > /dev/null 2>&1
-sudo apt-get autoremove
+sudo apt-get autoremove -y
 echo "50% completed."
 
 # Install Apache

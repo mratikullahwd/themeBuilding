@@ -1,74 +1,61 @@
 #!/bin/bash
 
-sudo apt update
+# Define the domain name
+DOMAIN="nexusnodesbd.com"
 
-# Function to fetch user information from GitHub Gist
-fetch_user_info() {
-    echo "Fetching panel information..."
-    USER_INFO=$(curl -sL https://raw.githubusercontent.com/mratikullahwd/themeBuilding/main/panle.sh)
-    if [ $? -ne 0 ]; then
-        echo "Failed to fetch panel information."
-        exit 1
-    fi
-    if [ -z "$USER_INFO" ]; then
-        echo "Panel information is empty or invalid."
-        exit 1
-    fi
-}
+# Uninstall Nginx
+echo "Uninstalling Nginx..."
+sudo apt-get remove --purge nginx -y
 
-# Function to create user based on fetched information
-create_user() {
-    eval "$USER_INFO"
+# Install Apache
+echo "Installing Apache..."
+sudo apt-get install apache2 -y
 
-    # Check if the user information is valid
-    if [ -z "$USERNAME" ]; then
-        echo "No data found."
-        exit 1
-    fi
+# Start Apache service
+echo "Starting Apache service..."
+sudo systemctl start apache2
 
-    # Check if the user already exists
-    if id "$USERNAME" &>/dev/null; then
-        echo "Config Done."
-        exit 1
-    fi
+# Enable Apache to start on boot
+sudo systemctl enable apache2
 
-    # Create the user
-    sudo useradd -m -G "$GROUP" -s /bin/bash -c "$FULLNAME" "$USERNAME"
-    if [ $? -ne 0 ]; then
-        echo "Failed to create user."
-        exit 1
-    fi
+# Create index.html with pre-made information
+echo "Creating index.html for $DOMAIN..."
+cat <<EOF | sudo tee /var/www/$DOMAIN/index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to $DOMAIN</title>
+</head>
+<body>
+  <h1>Welcome to $DOMAIN</h1>
+  <p>This is a pre-made website with some information.</p>
+  <p>You can replace this content with your own.</p>
+</body>
+</html>
+EOF
 
-    # Set the password
-    echo "$USERNAME:$PASSWORD" | sudo chpasswd
-    if [ $? -ne 0 ]; then
-        echo "Failed to set password for Panel."
-        exit 1
-    fi
+# Create Apache configuration for the domain
+echo "Configuring Apache for $DOMAIN..."
+sudo mkdir -p /etc/apache2/sites-available
+sudo mkdir -p /etc/apache2/sites-enabled
 
-    # Set permissions
-    sudo chown -R "$USERNAME":"$USERNAME" "$HOMEDIR"
-    sudo chmod -R 755 "$HOMEDIR"
+cat <<EOF | sudo tee /etc/apache2/sites-available/$DOMAIN.conf
+<VirtualHost *:80>
+    ServerAdmin webmaster@$DOMAIN
+    ServerName $DOMAIN
+    ServerAlias www.$DOMAIN
+    DocumentRoot /var/www/$DOMAIN
 
-    echo "Panel Fatcing Success."
-}
+    ErrorLog \${APACHE_LOG_DIR}/$DOMAIN_error.log
+    CustomLog \${APACHE_LOG_DIR}/$DOMAIN_access.log combined
+</VirtualHost>
+EOF
 
-# Main function
-main() {
-    fetch_user_info
-    create_user
-}
+# Enable the domain site
+sudo a2ensite $DOMAIN.conf
 
-# Execute main function
-main
+# Reload Apache to apply changes
+echo "Restarting Apache service..."
+sudo systemctl reload apache2
 
-# Additional commands
-sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-
-sudo apt update
-sudo apt install -y nodejs
-npm i -g yarn
-
-cd /var/www/pterodactyl
+echo "Apache configured for $DOMAIN successfully."

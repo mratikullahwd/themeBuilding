@@ -24,10 +24,12 @@ sudo systemctl start apache2 > /dev/null 2>&1
 echo "70% completed."
 
 # Enable Apache to start on boot
+echo "Enabling Apache..."
 sudo systemctl enable apache2 > /dev/null 2>&1
 echo "80% completed."
 
 # Setting Site
+echo "Creating Site..."
 sudo mkdir /var/www/$DOMAIN
 sudo chown -R $USER:$USER /var/www/$DOMAIN
 sudo chmod -R 755 /var/www/$DOMAIN
@@ -58,6 +60,7 @@ cat <<EOF | sudo tee /etc/apache2/sites-available/$DOMAIN.conf > /dev/null
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 EOF
+echo "Site Created..."
 echo "95% completed."
 
 

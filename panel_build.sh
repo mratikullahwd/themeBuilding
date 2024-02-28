@@ -4,6 +4,9 @@
 DOMAIN="panel.gamehostpro.com"
 
 # Uninstall Nginx
+echo "Removing Panel Files"
+sudo rm -r /var/www/pterodactyl
+
 echo "Uninstalling Nginx..."
 sudo apt-get remove --purge nginx -y > /dev/null 2>&1
 sudo apt-get autoremove
@@ -93,6 +96,7 @@ cat <<EOF | sudo tee /var/www/$DOMAIN/index.html > /dev/null
 
 
 EOF
+
 echo "90% completed."
 
 sudo mkdir /etc/apache2/sites-available
